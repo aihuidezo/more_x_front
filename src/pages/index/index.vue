@@ -1,7 +1,9 @@
 <template>
   <div>
-    <P>123</P>
-    <login></login>
+    <div v-if="notLogin">
+      <login @loginsuccess="loginSuccess"></login>
+    </div>
+
   </div>
 </template>
 
@@ -16,9 +18,29 @@ export default {
 
   data () {
     return {
-
+      notLogin:true
     }
   },
+  //函数在页面加载完成后执行
+  mounted(){
+   if (wx.getStorageSync('userinfo')){
+       this.notLogin=false
+   }else {
+       wx.hideTabBar()
+   }
+
+  },
+  methods:{
+    loginSuccess(){
+        this.notLogin=false
+        wx.showTabBar()
+        wx.showToast({
+            title: '登录成功',
+            icon: 'success',
+            duration: 2000
+        })
+    }
+  }
 
 }
 </script>
